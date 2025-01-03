@@ -156,7 +156,19 @@ const UploadModal = ({
               alt="Upload"
               sx={{ width: 80, height: 80, mb: 1 }}
             />
-            <Typography>Drop your image & video here, or browse</Typography>
+            <Typography>
+              Drop your image & video here, or
+              <Typography
+                sx={{
+                  display: "inline",
+                  color: "#1F4690",
+                  cursor: "pointer",
+                }}
+              >
+                {" "}
+                browse
+              </Typography>
+            </Typography>
             <Typography variant="body2" color="text.secondary">
               Supports: PNG, JPG & MP4
             </Typography>

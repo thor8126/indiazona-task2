@@ -128,20 +128,21 @@ function ReturnForm({ trackingData }) {
         <Typography
           sx={{
             fontStyle: "normal",
-            fontSize: { xs: "23px", sm: "28px" },
+            fontSize: { xs: "18px", sm: "28px" },
             fontWeight: "500",
             color: "#111827",
             lineHeight: "34px",
             textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
           }}
         >
-          Order ID: {trackingData?.orderId}
+          Order ID:
+          <span>{trackingData?.orderId}</span>
         </Typography>
         <Button
           variant="outlined"
           size="small"
           sx={{
-            padding: "9px 14px",
+            padding: "7px 10px",
             textTransform: "none",
             borderColor: "#455F76",
             color: "#6B7280",
@@ -186,11 +187,13 @@ function ReturnForm({ trackingData }) {
           onChange={(e) => setReturnType(e.target.value)}
         >
           <FormControlLabel
+            sx={{ mb: 1 }}
             value="return"
             control={<CustomRadio />}
             label="Do you want to return the product? (Applicable within 7 days)"
           />
           <FormControlLabel
+            sx={{ mb: 0.3 }}
             value="exchange"
             control={<CustomRadio />}
             label="Do you want to Exchange the product? (Applicable within 7 days)"
