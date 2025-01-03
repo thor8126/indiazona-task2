@@ -7,10 +7,27 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { useNavigate } from "react-router-dom";
 
-function BreadCrumbs() {
+const BreadCrumbs = ({ items = [], isReturn = false }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const defaultItems = [
+    { label: "Home", href: "/order-tracking" },
+    { label: "Orders", href: "/" },
+    { label: "Order Tracking", href: "/" },
+  ];
+
+  const returnItems = [...defaultItems, { label: "Product Return", href: "#" }];
+
+  const displayItems = isReturn ? returnItems : defaultItems;
+
+  const handleClick = (e, href) => {
+    e.preventDefault();
+    navigate("/");
+  };
 
   return (
     <Breadcrumbs
@@ -22,50 +39,36 @@ function BreadCrumbs() {
         },
       }}
     >
-      <Link
-        sx={{
-          fontSize: { xs: "0.8rem", sm: "0.9rem" },
-          whiteSpace: "nowrap",
-        }}
-        underline="hover"
-        color="inherit"
-        href="#"
-      >
-        Home
-      </Link>
-      <Link
-        sx={{
-          fontSize: { xs: "0.8rem", sm: "0.9rem" },
-          whiteSpace: "nowrap",
-        }}
-        underline="hover"
-        color="inherit"
-        href="#"
-      >
-        Orders
-      </Link>
-      <Link
-        sx={{
-          fontSize: { xs: "0.8rem", sm: "0.9rem" },
-          whiteSpace: "nowrap",
-        }}
-        underline="hover"
-        color="inherit"
-        href="#"
-      >
-        Order Tracking
-      </Link>
-      <Typography
-        sx={{
-          fontSize: { xs: "0.8rem", sm: "0.9rem" },
-          whiteSpace: "nowrap",
-        }}
-        color="inherit"
-      >
-        Product Return
-      </Typography>
+      {displayItems.map((item, index) =>
+        index === displayItems.length - 1 ? (
+          <Typography
+            key={item.label}
+            sx={{
+              fontSize: { xs: "0.8rem", sm: "0.9rem" },
+              whiteSpace: "nowrap",
+            }}
+            color="inherit"
+          >
+            {item.label}
+          </Typography>
+        ) : (
+          <Link
+            key={item.label}
+            sx={{
+              fontSize: { xs: "0.8rem", sm: "0.9rem" },
+              whiteSpace: "nowrap",
+              cursor: "pointer",
+            }}
+            underline="hover"
+            color="inherit"
+            onClick={(e) => handleClick(e, item.href)}
+          >
+            {item.label}
+          </Link>
+        )
+      )}
     </Breadcrumbs>
   );
-}
+};
 
 export default BreadCrumbs;

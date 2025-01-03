@@ -1,13 +1,33 @@
 import React from "react";
-import { Box, Container, Stack, useTheme, useMediaQuery } from "@mui/material";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Stack,
+  useTheme,
+  useMediaQuery,
+  Divider,
+} from "@mui/material";
 import BreadCrumbs from "./BreadCrumbs";
 import img from "./image.png";
+import cancelImg from "./cancelmodal.png";
 
 import ProductDetail from "./ProductDetail";
 import ReturnForm from "./ReturnForm";
+import Tracker from "./Tracker";
+import DeliveryInfo from "./DeliveryInfo";
+import OrderSummary from "./OrderSummary";
+import CancelModal from "./CancelModal";
 
 const OrderTracking = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [isCancelledModalOpen, setIsCancelledModalOpen] = React.useState(false);
+
+  const isReturn = location.pathname === "/cancel";
+
   const data = {
     product: {
       brand: "SAMSUNG",
@@ -17,6 +37,7 @@ const OrderTracking = () => {
       img: img,
     },
     trackingData: {
+      isCancelled: false,
       orderId: "3354-6546-5452",
       orderConfirmedDate: "Dec 24, 2024",
       estimatedDelivery: "Dec 30, 2024",
@@ -47,9 +68,6 @@ const OrderTracking = () => {
     },
   };
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
   return (
     <Container
       maxWidth="xl"
@@ -60,23 +78,28 @@ const OrderTracking = () => {
       }}
     >
       <Stack spacing={{ xs: 2, md: 2 }}>
-        <BreadCrumbs />
-
+        <BreadCrumbs isReturn={isReturn} />
         {isMobile ? (
-          // Mobile Layout
           <Stack spacing={1}>
             <ProductDetail product={data.product} />
-            <ReturnForm trackingData={data.trackingData} />
+            {isReturn ? (
+              <ReturnForm trackingData={data.trackingData} />
+            ) : (
+              <>
+                <Tracker trackingData={data.trackingData} />
+                <Divider />
+                <DeliveryInfo
+                  deliveryInfo={data.deliveryInfo}
+                  isCancelled={data.trackingData.isCancelled}
+                  setIsCancelledModalOpen={setIsCancelledModalOpen}
+                />
+                <Divider />
+                <OrderSummary summary={data.summary} />
+              </>
+            )}
           </Stack>
         ) : (
-          // Desktop Layout
-          <Box
-            sx={{
-              display: "flex",
-              gap: { md: 2, lg: 3 },
-            }}
-          >
-            {/* LeftSection */}
+          <Box sx={{ display: "flex", gap: { md: 2, lg: 3 } }}>
             <Box
               sx={{
                 width: { md: "35%", lg: "30%" },
@@ -85,19 +108,34 @@ const OrderTracking = () => {
             >
               <ProductDetail product={data.product} />
             </Box>
-
-            {/* RightSection */}
-            <Stack
-              spacing={1}
-              sx={{
-                flex: 1,
-              }}
-            >
-              <ReturnForm trackingData={data.trackingData} />
+            <Stack spacing={1} sx={{ flex: 1 }}>
+              {isReturn ? (
+                <ReturnForm trackingData={data.trackingData} />
+              ) : (
+                <>
+                  <Tracker trackingData={data.trackingData} />
+                  <DeliveryInfo
+                    deliveryInfo={data.deliveryInfo}
+                    isCancelled={data.trackingData.isCancelled}
+                    setIsCancelledModalOpen={setIsCancelledModalOpen}
+                  />
+                  <OrderSummary summary={data.summary} />
+                </>
+              )}
             </Stack>
           </Box>
         )}
       </Stack>
+      <CancelModal
+        orderId={data.trackingData.orderId}
+        open={isCancelledModalOpen}
+        onClose={() => setIsCancelledModalOpen(false)}
+        onConfirm={() => {
+          setIsCancelledModalOpen(false);
+          navigate("/cancel");
+        }}
+        cancelImg={cancelImg}
+      />
     </Container>
   );
 };
