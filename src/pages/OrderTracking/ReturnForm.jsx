@@ -180,7 +180,7 @@ function ReturnForm({ trackingData }) {
       </Box>
       <Divider />
 
-      <FormControl component="fieldset" sx={{ width: "100%", mb: 3 }}>
+      <FormControl component="fieldset" sx={{ width: "100%", mb: 3, mt: 2 }}>
         <RadioGroup
           value={returnType}
           onChange={(e) => setReturnType(e.target.value)}
