@@ -1,18 +1,29 @@
 import React, { useState } from "react";
 import { Box, Button, Paper, Typography, Collapse } from "@mui/material";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import {
+  Cancel,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import ResponsiveStepper from "./ResponsiveStepper";
+import CancelledStepper from "./CancelledStepper";
 
 const steps = ["Order Confirmed", "Shipped", "Out For Delivery", "Delivered"];
-const activeStep = 1;
+
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: "0 24px",
   backgroundColor: "#fff",
   borderRadius: "12px",
 }));
 
-export default function Tracker({ trackingData }) {
+export default function Tracker({
+  trackingData,
+  isCancelled,
+  isDelivered,
+  activeStep,
+  setActiveStep,
+}) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -85,7 +96,7 @@ export default function Tracker({ trackingData }) {
           gap: { xs: 1, sm: 2 },
           flexDirection: { xs: "column", sm: "row" },
           justifyContent: "space-between",
-          padding: 2,
+          mb: { xs: 1, sm: 1 },
         }}
       >
         <Box>
@@ -189,7 +200,18 @@ export default function Tracker({ trackingData }) {
             },
           }}
         >
-          <ResponsiveStepper steps={steps} activeStep={activeStep} />
+          {isCancelled ? (
+            <>
+              <CancelledStepper activeStep={activeStep} />
+            </>
+          ) : (
+            <ResponsiveStepper
+              steps={steps}
+              activeStep={activeStep}
+              isDelivered={isDelivered}
+              setActiveStep={setActiveStep}
+            />
+          )}
         </Box>
         <Box
           sx={{
@@ -198,6 +220,7 @@ export default function Tracker({ trackingData }) {
             width: "100%",
             flexDirection: { xs: "column", sm: "row" },
             gap: { xs: 9.5, sm: 2 },
+            visibility: { xs: "hidden", sm: "visible" },
           }}
         >
           <Box

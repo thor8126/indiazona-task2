@@ -9,14 +9,7 @@ import {
   Box,
 } from "@mui/material";
 
-const CancelModal = ({
-  orderId,
-  open,
-  onClose,
-  onConfirm,
-  cancelImg,
-  setIsReturn,
-}) => {
+const CancelModal = ({ orderId, open, onClose, onConfirm, cancelImg }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <Box sx={{ padding: 6, textAlign: "center" }}>

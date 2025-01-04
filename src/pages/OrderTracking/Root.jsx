@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -26,7 +27,13 @@ const OrderTracking = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isCancelledModalOpen, setIsCancelledModalOpen] = React.useState(false);
 
-  const isReturn = location.pathname === "/cancel";
+  const [isCancelled, setIsCancelled] = useState(false);
+  const [isDelivered, setIsDelivered] = useState(true);
+
+  //stepper active step, change this value to see different steps
+  const [activeStep, setActiveStep] = useState(isDelivered ? 3 : 0);
+
+  const isReturn = location.pathname === "/return";
 
   const data = {
     product: {
@@ -37,7 +44,6 @@ const OrderTracking = () => {
       img: img,
     },
     trackingData: {
-      isCancelled: false,
       orderId: "3354-6546-5452",
       orderConfirmedDate: "Dec 24, 2024",
       estimatedDelivery: "Dec 30, 2024",
@@ -86,12 +92,20 @@ const OrderTracking = () => {
               <ReturnForm trackingData={data.trackingData} />
             ) : (
               <>
-                <Tracker trackingData={data.trackingData} />
+                <Tracker
+                  trackingData={data.trackingData}
+                  isCancelled={isCancelled}
+                  isDelivered={isDelivered}
+                  activeStep={activeStep}
+                  setActiveStep={setActiveStep}
+                />
                 <Divider />
                 <DeliveryInfo
                   deliveryInfo={data.deliveryInfo}
-                  isCancelled={data.trackingData.isCancelled}
+                  isCancelled={isCancelled}
                   setIsCancelledModalOpen={setIsCancelledModalOpen}
+                  isDelivered={isDelivered}
+                  onNotHappy={() => navigate("/return")}
                 />
                 <Divider />
                 <OrderSummary summary={data.summary} />
@@ -113,11 +127,19 @@ const OrderTracking = () => {
                 <ReturnForm trackingData={data.trackingData} />
               ) : (
                 <>
-                  <Tracker trackingData={data.trackingData} />
+                  <Tracker
+                    trackingData={data.trackingData}
+                    isCancelled={isCancelled}
+                    isDelivered={isDelivered}
+                    activeStep={activeStep}
+                    setActiveStep={setActiveStep}
+                  />
                   <DeliveryInfo
                     deliveryInfo={data.deliveryInfo}
-                    isCancelled={data.trackingData.isCancelled}
+                    isCancelled={isCancelled}
                     setIsCancelledModalOpen={setIsCancelledModalOpen}
+                    isDelivered={isDelivered}
+                    onNotHappy={() => navigate("/return")}
                   />
                   <OrderSummary summary={data.summary} />
                 </>
@@ -132,7 +154,7 @@ const OrderTracking = () => {
         onClose={() => setIsCancelledModalOpen(false)}
         onConfirm={() => {
           setIsCancelledModalOpen(false);
-          navigate("/cancel");
+          setIsCancelled(true);
         }}
         cancelImg={cancelImg}
       />

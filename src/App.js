@@ -11,7 +11,7 @@ function App() {
       <Route path="/" element={<AdminLayout />}>
         <Route index element={<Navigate to="/order-tracking" replace />} />
         <Route path="/order-tracking" element={<OrderTracking />} />
-        <Route path="/cancel" element={<OrderTracking />} />
+        <Route path="/return" element={<OrderTracking />} />
       </Route>
     </Routes>
   );
